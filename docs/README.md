@@ -7,7 +7,7 @@ The data used is made aviailable from the IIoT repository [IIoT](https://github.
 ## Visualization
 1. Architecture frameworks for IIoT
 
-![Reference architectures](https://github.com/PriyankaNanjappa/IIoT/blob/master/docs/static/images/referencearchitectures.png=60*20)
+![Reference architectures](https://github.com/PriyankaNanjappa/IIoT/blob/master/docs/static/images/referencearchitectures.png=80*20)
 
 
 
