@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- stylesheets -->
+    <link href="static/jquery/jquery-ui.css" rel="stylesheet">
+    <link href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="styles/style.css"/>
+    <!-- jquery and bootstrap -->
+    <script src="static/jquery/jquery.min.js"></script>
+    <script src="static/jquery/jquery-ui.js"></script>
+    <script src="static/bootstrap/js/bootstrap.min.js"></script>
+
+    <title>Industry 4.0 Standards</title>
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header"><a href="#" class="navbar-brand">Standards Knowledge Graph</a>
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main"><span
+                    class="icon-bar"></span> <span class="icon-bar"></span><span class="icon-bar"></span></button>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar-main">
+            <ul class="nav navbar-nav">
+                <li><a href="views/chart.html">Frameworks</a></li>
+                <li><a href="views/map.html">Locations</a></li>
+                <li><a href="views/timeline.html">Timeline</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Network<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="views/network.html">Standards</a></li>
+                        <li><a href="views/network_cc.html">Classifications & Concerns</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Venn<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="views/venn_fw.html">Standards & Frameworks</a></li>
+                        <li><a href="views/venn_cls.html">Standards & Classifications</a></li>
+                        <li><a href="views/venn_fw_concern.html">Concerns & Frameworks</a></li>
+                        <li><a href="views/venn_cls_concern.html">Concerns & Classifications</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Co-occurrence Matrix<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="views/matrix_fw_concern.html">Frameworks & Concerns</a></li>
+                        <li><a href="views/matrix_cls_concern.html">Classifications & Concerns</a></li>
+                        <li><a href="views/matrix_concern_fw.html">Concerns & Frameworks</a></li>
+                        <li><a href="views/matrix_concern_cls.html">Concerns & Classifications</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav pull-right copyright">
+                <li class="nav-item">
+                    <span class="nav-link">© Fraunhofer IAIS, 2017-2018</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- Page Content -->
+<div class="container-fluid text-center">
+    <div id="home">
+        <div class="container-fluid col-md-12">
+            <div id="intro_text">
+                <h1>Standards Ontology Visualization</h1>
+                <p>The Industry 4.0 vision is the fourth revolution of the industry by means of the Internet of
+                    Things,
+                    Internet of Services and Cyber Physical Systems. Standards are important for realizing the
+                    Industry
+
+                    4.0 vision. This website is an attempt to give an overview of the most relevant standards for
+                    I4.0.</p>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="thumbnail">
+                        <a href="views/chart.html">
+                            <div class="caption">
+                                <p><strong>Standards</strong></p>
+                            </div>
+                            <img class="img-responsive" alt="Standards" src="static/images/standards.PNG">
+                            <div class="caption ">
+                                <p>Hierarchical View of Standards by Organizations</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="thumbnail">
+                        <a href="views/map.html">
+                            <div class="caption">
+                                <p><strong>Locations</strong></p>
+                            </div>
+                            <img class="img-responsive" alt="Map" src="static/images/map.PNG">
+                            <div class="caption">
+                                <p>Locations of Headquarters of Standards Organizations</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="thumbnail">
+                        <a href="views/timeline.html">
+                            <div class="caption">
+                                <p><strong>Timeline</strong></p>
+                            </div>
+                            <img class="img-responsive" alt="Timeline" src="static/images/timeline.PNG">
+                            <div class="caption">
+                                <p>Timeline of Formation of Standards Organizations</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="thumbnail">
+                        <a href="views/network.html">
+                            <div class="caption">
+                                <p><strong>Network</strong></p>
+                            </div>
+                            <img class="img-responsive" alt="Network" src="static/images/network.png">
+                            <div class="caption">
+                                <p>Relations between Standards</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <p>For reference, see the Standards Ontology in <a href="http://vocol.iais.fraunhofer.de/sto">VoCol</a> and <a href="https://github.com/i40-Tools/StandardOntology">GitHub</a></p>
+        </div>
+    </div>
+</div>
+<!--Footer-->
+<div class="footer navbar-fixed-bottom footer-cp">
+    <ul class="nav navbar-nav pull-right">
+        <li class="nav-item">
+            <span class="nav-link">© Fraunhofer IAIS, 2017-2018, Irlan Grangel, Steffen Lohmann, Mayesha Tasnim</span>
+        </li>
+    </ul>
+</div>
+
+</body>
