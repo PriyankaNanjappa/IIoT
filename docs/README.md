@@ -30,9 +30,6 @@ There are around 20 such architectures identified in this project. A visualizati
 
 
 
-<p align="center">
-<img src="https://github.com/PriyankaNanjappa/IIoT/blob/master/docs/static/images/referencearchitectures.png" alt="Reference architectures" width="600" height="600"/>
-
 </p>
 
 <ol>
