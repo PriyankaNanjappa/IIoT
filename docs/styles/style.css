@@ -1,0 +1,387 @@
+.node {
+    cursor: pointer;
+}
+
+.node:hover {
+    stroke: "yellow";
+    stroke-width: 3px;
+}
+
+
+.node-label {
+    text-anchor: middle;
+    color: #fff9ff;
+}
+
+.node--root{
+    pointer-events: none;
+}
+
+.bubble-chart{
+    margin-left: 10%
+}
+
+.node-label:hover{
+    cursor: pointer;
+    font-weight: 500;
+}
+
+h2 {
+    text-align: center;
+}
+
+tspan{
+    display: inline-block;
+    margin-top: 1%;
+    background-color: rgba(0,0,0,0.25)
+}
+
+.breadcrumb{
+    cursor: pointer;
+    font-size: 11.5pt !important;
+}
+#search_box {
+    width: 85%;
+    padding: 5px;
+    margin-top: 7px;
+}
+
+#search_button{
+    padding: 5px;
+    color: black;
+}
+
+#chart{
+    display: block;
+    margin: auto;
+}
+
+#sto_map {
+    height: 80vh;
+    z-index: 0;
+}
+
+.vertical-center {
+    min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+    min-height: 100vh; /* These two lines are counted as one :-)       */
+    max-width: 83vw;
+    display: flex;
+    align-items: center;
+}
+
+/*WebVowl CSS for halo animation*/
+
+@-webkit-keyframes pulseAnimation {
+    0% {
+        -webkit-transform: scale(1.5);
+        stroke-width: 3.33;
+    }
+    50%{ stroke-width: 4;}
+    100% {
+        -webkit-transform: scale(1.0);
+        stroke-width: 5;
+    }
+}
+@-moz-keyframes pulseAnimation {
+    0% {
+        -webkit-transform: scale(1.5);
+        stroke-width: 3.33;
+    }
+    50%{ stroke-width: 4;}
+    100% {
+        -webkit-transform: scale(1.0);
+        stroke-width: 5;
+    }
+}
+@-o-keyframes pulseAnimation {
+    0% {
+        -webkit-transform: scale(1.5);
+        stroke-width: 3.33;
+    }
+    50%{ stroke-width: 4;}
+    100% {
+        -webkit-transform: scale(1.0);
+        stroke-width: 5;
+    }
+}
+@keyframes pulseAnimation {
+    0% {
+        -webkit-transform: scale(1.5);
+        stroke-width: 3.33;
+    }
+    50%{ stroke-width: 4;}
+    100% {
+        -webkit-transform: scale(1.0);
+        stroke-width: 5;
+    }
+}
+
+
+.searchResultA {
+    fill: none !important;
+    stroke-width: 5 !important;
+    stroke: #f00 !important;
+    -webkit-animation-name: pulseAnimation !important;
+    -moz-animation-name: pulseAnimation !important;
+    -o-animation-name: pulseAnimation !important;
+    animation-name: pulseAnimation !important;
+
+    -webkit-animation-duration: 0.8s !important;
+    -moz-animation-duration: 0.8s !important;
+    -o-animation-duration: 0.8s !important;
+    animation-duration: 0.8s !important;
+
+    -webkit-transform: translateZ(0) !important;
+    -webkit-animation-iteration-count: 3 !important;
+    -moz-animation-iteration-count: 3 !important;
+    -o-animation-iteration-count: 3 !important;
+    animation-iteration-count: 3 !important;
+
+    -webkit-animation-timing-function: linear !important;
+    -moz-animation-timing-function: linear !important;
+    -o-animation-timing-function: linear !important;
+    animation-timing-function: linear !important;
+
+}
+/* a class for not animated search results (hovered over node)*/
+.searchResultB {
+    fill: none !important;
+    stroke-width: 3 !important;
+    stroke: #f00 !important;
+}
+
+.axis--grid .domain {
+    fill: #ddd;
+    stroke: none;
+}
+
+.axis--x .domain,
+.axis--grid .tick line {
+    stroke: #fff;
+}
+
+.axis--grid .tick--minor line {
+    stroke-opacity: .5;
+}
+
+.time-span-rect {
+    stroke-width: 6;
+}
+
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    width: 150px;
+    padding: 2px;
+    font: 14px sans-serif;
+    background: lightsteelblue;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+.axis--x > .tick > text {
+    font-size: 15px;
+    color: #0c5460;
+}
+
+.highlight-circle{
+    stroke-width: 2px;
+    stroke: red;
+}
+
+.highlight-text{
+    font-weight: bold;
+}
+
+
+#intro_text p{
+    font-size: medium;
+}
+
+#search_container{
+    margin-top: 20px;
+}
+
+#sidebar-info {
+    padding: 5% 1% 8% 2%;
+    overflow-y: auto;
+    color: white;
+    background-color: #333333;
+    height: 100%;
+    position: fixed;
+    right: 0;
+    margin-top: -7vh;
+}
+
+#sidebar-info h4{
+    color: lightgrey;
+    font-weight: 400;
+}
+
+#sidebar-text{
+
+}
+
+/* custom template */
+html, body {
+    height: 100%;
+}
+
+body {
+    padding-top:50px;
+}
+
+.wrapper {
+    height: 99%;
+    overflow-y:hidden !important;
+}
+
+.chart-container {
+    width:100%;
+    height:85vh;
+}
+
+#sequence{
+    margin-bottom: -20px;
+    margin-top:1%;
+}
+
+.info{
+    font-size: small;
+    color: lightgrey;
+    text-align: center;
+}
+
+#timeline{
+    height: 70vh !important;
+}
+
+.thumbnail a > img {
+    height: 45vh;
+    object-fit: contain;
+}
+
+.copyright{
+    padding: 12px;
+    color:darkgray;
+}
+
+.footer-cp{
+    background-color: #333333;
+    font-size: x-small;
+    color: darkgray;
+}
+
+.custom-tooltip{
+    background: transparent;
+    font-weight: 600;
+    border: none !important;
+    color: darkblue;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    -moz-box-shadow: none;
+    -o-box-shadow: none;
+}
+
+.node--leaf {
+    pointer-events: auto;
+}
+
+.search-container{
+    float: right;
+    margin: 0% 5% 2% 0%;
+    z-index: 10;
+}
+
+h2{
+    margin-top: 2px !important;
+}
+
+#standardDetails{
+    margin-top: 15px;
+}
+
+.property-table{
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    table-layout: fixed;
+}
+
+.property-table td {
+    padding: 10px;
+}
+
+.meta-info > div{
+    margin-right: 2%;
+}
+
+.meta-info > div > span, .meta-info > div > label {
+    font-size: medium;
+}
+
+.meta-info > label {
+    font-size: medium;
+}
+
+:root {
+    --rowNum: 3;
+    --colNum: 8;
+    --gridHeight: 20px;
+}
+
+.selectionUI{
+    display: inline-grid;
+    width:100%;
+    grid-template-columns: repeat(var(--colNum), auto);
+    font-size: small;
+}
+
+.grid-item {
+    grid-column-start: auto;
+    grid-row-start: auto;
+    margin: 5px;
+}
+
+.venn-node {
+    cursor: pointer;
+}
+
+.venn-node:hover {
+    stroke: black;
+    stroke-width: 3px;
+}
+
+.link{
+    cursor:pointer
+}
+
+.link:hover{
+    stroke: red;
+    stroke-width: 3px;
+}
+
+.user-input{
+    display: flex;
+}
+
+.toggle-collapse, .toggle-collapse:hover, .toggle-collapse:focus{
+    border: none !important;
+    outline: none !important;
+}
+
+#multiselect_cls{
+    height: 80vh;
+}
+
+.background{
+    fill: #eee;
+}
+
+#matrix-chart{
+    height: 73vh;
+    width: 73vw;
+    overflow: auto;
+    padding: 10px;
+}
