@@ -11,12 +11,11 @@ The data model is based on the definitions of architecture descriptions, archite
 
 The data used is made aviailable from the IIoT repository [IIoT](https://github.com/PriyankaNanjappa/IIoT).
 
-
-## Visualization
-1. Architecture frameworks for IIoT
+##1. Architecture frameworks for IIoT
 
 Several organisations that work on IIoT have their own reference architectures that represent an IIoT system.
-There are around 20 such architectures identified in this project. A visualization of the list of architectures in table form is provided [here](https://i40-tools.github.io/StandardOntologyVisualization/views/matrix_fw_concern.html). 
+There are around 20 such architectures identified in this project. A visualization of the list of architectures in table form is provided [here](https://i40-tools.github.io/StandardOntologyVisualization/views/matrix_fw_concern.html). The concerns of IIoT are represented as the labels of columns in the matrix and the architectures appear as the labels of the rows. The blue blocks in the matrix show that the architectures consider the corresponding concern and discuss the ways to address this concern in some detail.
+
 
 <p align="center">
 <img src="https://github.com/PriyankaNanjappa/IIoT/blob/master/docs/static/images/referencearchitectures.png" alt="Reference architectures" width="600" height="600"/>
