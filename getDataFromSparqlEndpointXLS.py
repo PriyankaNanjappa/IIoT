@@ -99,7 +99,7 @@ for r in range(0,len(frameworks)):
              
 for f in range(0,len(is_BlindSpot_frameworks)):        
         if is_BlindSpot_frameworks[f] == 1:
-           Frameworks_Concerns.write(f+1, len(frameworks)+2,'BlindSpot') 
+           Frameworks_Concerns.write(f+1, len(concerns)+2,'BlindSpot') 
                        
 
 # rows = len(frameworksAndConcerns)   
