@@ -1,5 +1,5 @@
-#!/usr/bin/env python2
-#pip for python2(.7)
+# !/usr/bin/env python2
+# pip for python2(.7)
 # pip install sparql-client
 
 import sparql
@@ -15,9 +15,11 @@ from itertools import combinations
 wb = Workbook() 
   
 # add_sheet is used to create sheets. 
-Frameworks_Concerns = wb.add_sheet('Sheet 1',cell_overwrite_ok=True)
-Classifications_Concerns = wb.add_sheet('Sheet 2')
-FW1_FW2 = wb.add_sheet('Sheet 3',cell_overwrite_ok=True)
+Frameworks_Concerns = wb.add_sheet('Frameworks_Concerns',cell_overwrite_ok=True)
+Classifications_Concerns = wb.add_sheet('Classifications_Concerns')
+FW1_FW2 = wb.add_sheet('FW1_FW2',cell_overwrite_ok=True)
+
+#SPARQL endpoint
 s = sparql.Service('https://dydra.com/mtasnim/stoviz/sparql', "utf-8", "GET") ;
 
 
@@ -69,7 +71,10 @@ for fw in frameworks :
             print(error)
          
 
- 
+wb.save('xlwt example.xls')
+
+print(frameworksAndConcerns)
+
    
 # Blind spot: No frames link for a Concern 
 Frameworks_Concerns.write(len(frameworks)+2,0, 'Blind Spot Concerns')
@@ -142,12 +147,6 @@ for r in range(0,len(frameworks)):
         unioncount = 0  
      
     
-wb.save('xlwt example.xls')
-
-print(frameworksAndConcerns)
-
-
-
 # Query all Classifications
 print("")
 print("Query for Classifications:")
@@ -186,4 +185,52 @@ wb.save('xlwt example.xls')
 print(classificationsAndConcerns)
 
 
-#TODO: FW -> CL -> Concern
+print("")
+print("Query Concern Hierarchy:")
+
+SupportingConcernsSubject = s.query("PREFIX sto: <https://w3id.org/i40/sto#> PREFIX skos: <http://www.w3.org/2004/02/skos/core#>  Select  ?concern1  ?concern2   where {{?concern1 sto:supports ?concern2} UNION {?concern1 skos:narrower ?concern2}}") 
+
+subjects= ['']
+objects= ['']
+Levelup= ['']
+Leve2up= ['']
+Leve3up= ['']
+
+for row in SupportingConcernsSubject :
+    subjects.append(sparql.unpack_row(row)[0])
+    objects.append(sparql.unpack_row(row)[1])
+    
+
+for row1 in range(1,len(objects)):
+    for row2 in range( 1,len(subjects)):
+        if objects[row1] == subjects[row2]:
+            Levelup.insert(row1,objects[row2])
+            break            
+        else:
+            Levelup.insert(row1,objects[row1]) 
+                       
+   
+for row1 in range(1,len(objects)):
+    for row2 in range( 1,len(subjects)):
+        if Levelup[row1] == subjects[row2]:
+            Leve2up.insert(row1,objects[row2])
+            break
+        else:
+            Leve2up.insert(row1,objects[row1])     
+
+for row1 in range(1,len(objects)):
+    for row2 in range( 1,len(subjects)):
+        if Leve2up[row1] == subjects[row2]:
+            Leve3up.insert(row1,objects[row2])
+            break
+        else:
+            Leve3up.insert(row1,objects[row1])             
+
+        
+for row1 in range(1,len(subjects)):
+    print(subjects[row1].replace('https://w3id.org/i40/sto#', ' --> ') + objects[row1].replace('https://w3id.org/i40/sto#', ' --> ') + Levelup[row1].replace('https://w3id.org/i40/sto#', ' --> ')+  Leve2up[row1].replace('https://w3id.org/i40/sto#', ' --> ') +  Leve2up[row1].replace('https://w3id.org/i40/sto#', ' --> ') ) 
+      
+
+# # UNION {?concern1 skos:broader ?concern2}
+
+# #TODO: FW -> CL -> Concern
