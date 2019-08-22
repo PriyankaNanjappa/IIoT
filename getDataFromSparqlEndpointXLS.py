@@ -26,7 +26,7 @@ s = sparql.Service('https://dydra.com/mtasnim/stoviz/sparql', "utf-8", "GET") ;
 # Query all concerns
 print("")
 print("Query for Concerns:")
-results = s.query("PREFIX sto: <https://w3id.org/i40/sto#> Select distinct ?concern where {?concern a sto:Concern}") ;
+results = s.query("PREFIX sto_iot: <https://w3id.org/i40/sto/iot#> Select distinct ?concern where {?concern a sto_iot:Concern}") ;
 
 concerns = []
 i = 0;
@@ -54,7 +54,7 @@ frameworksAndConcerns = [[ 0 for i in range(len(concerns))] for j in range(len(f
 for fw in frameworks :
     print("")
     print("Query Concerns for Framework " + fw)
-    results = s.query("PREFIX sto: <https://w3id.org/i40/sto#> Select distinct ?concern where {<" + fw + "> sto:frames ?concern}") ;  # sto:hasTargetConcern
+    results = s.query("PREFIX sto_iot: <https://w3id.org/i40/sto/iot#> Select distinct ?concern where {<" + fw + "> sto_iot:frames ?concern}") ;  # sto:hasTargetConcern
     
     fw_index = frameworks.index(fw)
     # write framework URIs in column 0
@@ -164,7 +164,7 @@ classificationsAndConcerns = [[ 0 for i in range(len(concerns))] for j in range(
 for cl in classifications :
     print("")
     print("Query Concerns for Classification " + cl)
-    results = s.query("PREFIX sto: <https://w3id.org/i40/sto#> Select distinct ?concern where {<" + cl + "> sto:frames ?concern }")    #sto:Classification sto:frames sto:Concern
+    results = s.query("PREFIX sto_iot: <https://w3id.org/i40/sto/iot#> Select distinct ?concern where {<" + cl + "> sto_iot:frames ?concern }")    #sto:Classification sto:frames sto:Concern
     
     cl_index = classifications.index(cl)
     Classifications_Concerns.write(cl_index+1,0, cl)
@@ -188,7 +188,7 @@ print(classificationsAndConcerns)
 print("")
 print("Query Concern Hierarchy:")
 
-SupportingConcernsSubject = s.query("PREFIX sto: <https://w3id.org/i40/sto#> PREFIX skos: <http://www.w3.org/2004/02/skos/core#>  Select  ?concern1  ?concern2   where {{?concern1 sto:supports ?concern2} UNION {?concern1 skos:narrower ?concern2}}") 
+SupportingConcerns = s.query("PREFIX sto_iot: <https://w3id.org/i40/sto/iot#> PREFIX skos: <http://www.w3.org/2004/02/skos/core#>  Select  ?concern1  ?concern2   where {{?concern1 sto_iot:supports ?concern2} UNION {?concern1 skos:narrower ?concern2}}") 
 
 subjects= ['']
 objects= ['']
@@ -196,7 +196,7 @@ Levelup= ['']
 Leve2up= ['']
 Leve3up= ['']
 
-for row in SupportingConcernsSubject :
+for row in SupportingConcerns :
     subjects.append(sparql.unpack_row(row)[0])
     objects.append(sparql.unpack_row(row)[1])
     
