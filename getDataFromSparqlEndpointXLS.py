@@ -185,52 +185,71 @@ wb.save('xlwt example.xls')
 print(classificationsAndConcerns)
 
 
+  
+# create a 2 dimensional array of concern ierarchy
 print("")
-print("Query Concern Hierarchy:")
+print("\nQuery Concern Hierarchy:\n")
 
 SupportingConcerns = s.query("PREFIX sto_iot: <https://w3id.org/i40/sto/iot#> PREFIX skos: <http://www.w3.org/2004/02/skos/core#>  Select  ?concern1  ?concern2   where {{?concern1 sto_iot:supports ?concern2} UNION {?concern1 skos:narrower ?concern2}}") 
 
-subjects= ['']
-objects= ['']
-Levelup= ['']
-Leve2up= ['']
-Leve3up= ['']
+
+arr = [[] for i in range(2)]
+arr_Org =[]
+arr_New =[]
+
 
 for row in SupportingConcerns :
-    subjects.append(sparql.unpack_row(row)[0])
-    objects.append(sparql.unpack_row(row)[1])
+    arr[0].append(sparql.unpack_row(row)[0])
+    arr[1].append(sparql.unpack_row(row)[1])
     
-
-for row1 in range(1,len(objects)):
-    for row2 in range( 1,len(subjects)):
-        if objects[row1] == subjects[row2]:
-            Levelup.insert(row1,objects[row2])
-            break            
-        else:
-            Levelup.insert(row1,objects[row1]) 
-                       
+for i in range (0, len(arr[0])) :
+    arr_temp = [arr[0][i],arr[1][i]]
+    arr_Org.append(arr_temp)
+    arr_New.append(arr_temp)
    
-for row1 in range(1,len(objects)):
-    for row2 in range( 1,len(subjects)):
-        if Levelup[row1] == subjects[row2]:
-            Leve2up.insert(row1,objects[row2])
-            break
-        else:
-            Leve2up.insert(row1,objects[row1])     
 
-for row1 in range(1,len(objects)):
-    for row2 in range( 1,len(subjects)):
-        if Leve2up[row1] == subjects[row2]:
-            Leve3up.insert(row1,objects[row2])
-            break
-        else:
-            Leve3up.insert(row1,objects[row1])             
-
+def hierarchy(arr_New,itr):
+    arr_New1 =[]
+    for i in range (0,len(arr_New)):
+        rootfun = 1 
         
-for row1 in range(1,len(subjects)):
-    print(subjects[row1].replace('https://w3id.org/i40/sto#', ' --> ') + objects[row1].replace('https://w3id.org/i40/sto#', ' --> ') + Levelup[row1].replace('https://w3id.org/i40/sto#', ' --> ')+  Leve2up[row1].replace('https://w3id.org/i40/sto#', ' --> ') +  Leve2up[row1].replace('https://w3id.org/i40/sto#', ' --> ') ) 
-      
+        for j in range (0,len(arr_Org)):
+        
+            #print('i='+str(i)+'j='+str(j))
+            if arr_New[i][itr] == arr_Org[j][0]:
+                rootfun = 0
+                arr_temp=arr_New[i][:] #copy all elements of list
+                arr_temp.append(arr_Org[j][1])
+                #print(arr_temp) 
+                arr_New1.append(arr_temp)
+            
+        if rootfun == 1:       
+            arr_temp=arr_New[i][:]
+            arr_temp.append('root')
+            arr_New1.append(arr_temp)
+            
+    return(arr_New1)           
 
-# # UNION {?concern1 skos:broader ?concern2}
+#iterate if root node not reached for some
+for itr in range (1,16):
+    #print(itr)
+    enditr=True
+    for r in range (0, len(arr_New) ) :
+        if arr_New[r][len(arr_New[r])-1] != 'root':
+            enditr=False
+            break
+            
+    if enditr == False:
+        arr_New = hierarchy(arr_New,itr)
+    else:
+        print('Root node reached for all leaves ')
+        break
+        
+#print final result: path from every leaf to it's root 
+for i in range (0, len(arr_New)) :
+    print(str(i))
+    print(arr_New[i])
+       
+# UNION {?concern1 skos:broader ?concern2}
 
-# #TODO: FW -> CL -> Concern
+#TODO: FW -> CL -> Concern
