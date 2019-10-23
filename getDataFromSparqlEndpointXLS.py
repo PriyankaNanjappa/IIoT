@@ -52,9 +52,9 @@ for row in results :
 
 print("\nQuery Concerns for Frameworks \n" )
 frameworksAndConcerns = [[ 0 for i in range(len(concerns))] for j in range(len(frameworks)) ]
+
 for fw in frameworks :
-    
-    
+     
     results = s.query("PREFIX sto_iot: <https://w3id.org/i40/sto/iot#> Select distinct ?concern where {<" + fw + "> sto_iot:frames ?concern}") ;  # sto:hasTargetConcern
     
     fw_index = frameworks.index(fw)
@@ -66,11 +66,24 @@ for fw in frameworks :
         try:
             concern_index = concerns.index(sparql.unpack_row(row)[0])
             frameworksAndConcerns[fw_index][concern_index] = 1
-            Frameworks_Concerns.write(fw_index+1,concern_index+1, '1')
+            Frameworks_Concerns.write(fw_index+1,concern_index+1, 1)
     
         except ValueError, error:
             print(error)
-         
+
+print("\Inference if classifcation addresses a concern so does the respective framework to which it belongs:\n")
+results = s.query("PREFIX sto: <https://w3id.org/i40/sto#> PREFIX sto_iot: <https://w3id.org/i40/sto/iot#> Select ?c ?f ?con where {?c sto:isDescribedin ?f. ?c rdf:type sto:StandardClassification. ?f rdf:type sto:StandardizationFramework. ?c sto_iot:frames ?con. ?con a sto_iot:Concern  }") ;
+infFr = []
+infCon = []
+for row in results :
+    infFr.append(sparql.unpack_row(row)[1])
+    infCon.append(sparql.unpack_row(row)[2])
+    
+for f, c in zip(infFr, infCon):
+    findex = frameworks.index(f)
+    cindex = concerns.index(c)
+    frameworksAndConcerns[findex][cindex] = 1
+    Frameworks_Concerns.write(findex+1,cindex+1, 1)   
 
 wb.save('xlwt example.xls')
 
@@ -90,6 +103,7 @@ for r in range(0,len(frameworks)):
             is_BlindSpot_frameworks = 0
     Frameworks_Concerns.write(r+1,len(concerns)+3,count)       
     if is_BlindSpot_frameworks == 1:
+        print(frameworks[r])
         Frameworks_Concerns.write(r+1,len(concerns)+2,'BlindSpot')                 
        
 
@@ -152,7 +166,7 @@ for r in range(0,len(frameworks)):
         
         
         if(unioncount == 0):
-            FW1_FW2.write(comblen,3,'0')
+            FW1_FW2.write(comblen,3, 0)
         else:
             overlap = intersectioncount/unioncount
             FW1_FW2.write(comblen,3,overlap)
@@ -186,7 +200,7 @@ for cl in classifications :
         try:
             concern_index = concerns.index(sparql.unpack_row(row)[0])
             classificationsAndConcerns[cl_index][concern_index] = 1
-            Classifications_Concerns.write(cl_index+1,concern_index+1, ' 1')
+            Classifications_Concerns.write(cl_index+1,concern_index+1,  1)
         except ValueError, error:
             print(error)
             
@@ -207,6 +221,7 @@ for r in range(0,len(classifications)):
             is_BlindSpot_classifications = 0
     Classifications_Concerns.write(r+1,len(concerns)+3,count)       
     if is_BlindSpot_classifications == 1:
+        print(classifications[r])
         Classifications_Concerns.write(r+1,len(concerns)+2,'BlindSpot')                 
        
 
@@ -271,7 +286,7 @@ def hierarchy(arr_New,itr):
 
 #iterate if root node not reached for some
 for itr in range (1,16):
-    enditr=True
+    enditr=True  
     for r in range (0, len(arr_New) ) :
         if arr_New[r][len(arr_New[r])-1] != 'root':
             enditr=False
@@ -425,16 +440,19 @@ def frameCoversConcern(framework , Concern ):
     subconcerns = getSubConcerns(Concern)
     
     #get all concerns addressed by framework
-    Framework_Concerns = s.query("PREFIX sto_iot: <https://w3id.org/i40/sto/iot#>   Select distinct ?concern   where { <" + framework + "> sto_iot:frames ?concern}")
-    
-    for row in Framework_Concerns :
-        F_C.append(sparql.unpack_row(row)[0])
-        
-    F_C = list(dict.fromkeys(F_C))
+    findex = frameworks.index(framework)
+    for c in range(len(concerns)):
+        if(frameworksAndConcerns[findex][c] == 1):
+            Framework_Concerns.append(concerns[c]) 
+        else:
+            pass
+    c = 0
+    F_C = list(dict.fromkeys(Framework_Concerns))
     for i in range (0, len(subconcerns)) :
         for j in range (0, len(F_C)):
             if (F_C[j]==subconcerns[i]):
                 c = c+1
+    
     c=float(c)       
     subConCount=len(subconcerns)
     subConCount=float(subConCount)
@@ -454,11 +472,41 @@ for i in frameworks :
         Frameworks_Covers_Concerns.write(0,cindex+1,j.replace('https://w3id.org/i40/sto#', ''))
         Coverage=frameCoversConcern(i , j )
         Frameworks_Covers_Concerns.write(findex+1,cindex+1,Coverage)
-    print(str(frameworks.index(i)+1)+'/'+str(len(frameworks)))
+    
            
 wb.save('xlwt example.xls')  
           
 print('\nCalculate Coverage for classifications\n')
+
+def clasfCoversConcern(classification , Concern ):
+    c = 0
+    subconcerns=[]
+    Classification_Concerns=[]
+    C_C=[]
+    subconcerns = getSubConcerns(Concern)
+    
+    #get all concerns addressed by classification
+    cindex = classifications.index(classification)
+    for c in range(len(concerns)):
+        if(classificationsAndConcerns[cindex][c] == 1):
+            Classification_Concerns.append(concerns[c]) 
+        else:
+            pass
+    c = 0
+    C_C = list(dict.fromkeys(Classification_Concerns))
+    for i in range (0, len(subconcerns)) :
+        for j in range (0, len(C_C)):
+            if (C_C[j]==subconcerns[i]):
+                c = c+1
+    
+    c=float(c)       
+    subConCount=len(subconcerns)
+    subConCount=float(subConCount)
+    if(subConCount!=0):
+        Coverage = (c/subConCount)*100
+    else:
+        print('This is a leaf concern')
+    return Coverage
 
 for i in classifications :
     clindex=classifications.index(i)
@@ -466,9 +514,9 @@ for i in classifications :
     for j in c_Top:
         conindex=c_Top.index(j)
         classifications_Covers_Concerns.write(0,conindex+1,j.replace('https://w3id.org/i40/sto#', ''))
-        Coverage=frameCoversConcern(i , j )
+        Coverage=clasfCoversConcern(i , j )
         classifications_Covers_Concerns.write(clindex+1,conindex+1, Coverage)
-    print(str(classifications.index(i)+1)+'/'+str(len(classifications)))     
+         
     
 wb.save('xlwt example.xls')   
 # UNION {?concern1 skos:broader ?concern2}
