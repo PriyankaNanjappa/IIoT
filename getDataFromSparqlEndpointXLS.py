@@ -21,9 +21,14 @@ FW1_FW2 = wb.add_sheet('FW1_FW2_Overlap',cell_overwrite_ok=True)
 Concern_Hierarchy = wb.add_sheet('Concern_Hierarchy')
 Frameworks_Covers_Concerns = wb.add_sheet('Frameworks_Covers_Concerns',cell_overwrite_ok=True)
 classifications_Covers_Concerns = wb.add_sheet('classifications_Covers_Concerns',cell_overwrite_ok=True)
+Frameworks_Blindspots_Concerns = wb.add_sheet('Frameworks_Blindspots_Concerns',cell_overwrite_ok=True)
+Frameworks_Recommend_Standard = wb.add_sheet('Frameworks_Recommend_Standard',cell_overwrite_ok=True)
+Standard_Concern = wb.add_sheet('Standard_Concern',cell_overwrite_ok=True)
+Resource_Reference = wb.add_sheet('Resource_Reference',cell_overwrite_ok=True)
+
 
 #SPARQL endpoint
-s = sparql.Service('https://dydra.com/mtasnim/stoviz/sparql', "utf-8", "GET") ;
+s = sparql.Service('https://dydra.com/pnanjappa/thesis/sparql', "utf-8", "GET") ;
 
 
 # Query all concerns
@@ -124,6 +129,7 @@ for c in range(0,len(concerns)):
         Frameworks_Concerns.write(len(frameworks)+2,c+1,'BlindSpot')       
         
   
+##### OVERLAP 
    
 from itertools import combinations 
   
@@ -242,7 +248,7 @@ for c in range(0,len(concerns)):
         Classifications_Concerns.write(len(classifications)+2,c+1,'BlindSpot')       
 
 wb.save('xlwt example.xls')
-  
+ 
 # create a 2 dimensional array of concern hierarchy
 print("\nQuery Concern Hierarchy:\n")
 
@@ -334,7 +340,7 @@ def getSubConcerns(Concern):
             
       
     subconcerns = list(dict.fromkeys(subconcerns))
-    
+    subconcerns.remove(Concern)
     
     return(subconcerns)    
 
@@ -367,7 +373,7 @@ def Fspecificity (con,level):
         return 1
     else:
         subconcerns = getSubConcerns(con)
-        subconcerns.remove(con)
+        
         for s in subconcerns:
             if s in Con_dict.keys():
                 sum = sum + Fspecificity(s,Con_dict[s][0])
@@ -438,7 +444,7 @@ def frameCoversConcern(framework , Concern ):
     Framework_Concerns=[]
     F_C=[]
     subconcerns = getSubConcerns(Concern)
-    
+   
     #get all concerns addressed by framework
     findex = frameworks.index(framework)
     for c in range(len(concerns)):
@@ -456,7 +462,10 @@ def frameCoversConcern(framework , Concern ):
     c=float(c)       
     subConCount=len(subconcerns)
     subConCount=float(subConCount)
+    Frameworks_Covers_Concerns.write(len(frameworks)+2,cindex+1,subConCount)
     if(subConCount!=0):
+        # print(Concern)
+        # print(subConCount)
         Coverage = (c/subConCount)*100
     else:
         print('This is a leaf concern')
@@ -502,6 +511,7 @@ def clasfCoversConcern(classification , Concern ):
     c=float(c)       
     subConCount=len(subconcerns)
     subConCount=float(subConCount)
+    classifications_Covers_Concerns.write(len(classifications)+2,conindex+1, subConCount)
     if(subConCount!=0):
         Coverage = (c/subConCount)*100
     else:
@@ -516,7 +526,133 @@ for i in classifications :
         classifications_Covers_Concerns.write(0,conindex+1,j.replace('https://w3id.org/i40/sto#', ''))
         Coverage=clasfCoversConcern(i , j )
         classifications_Covers_Concerns.write(clindex+1,conindex+1, Coverage)
-         
+        
+################################################################################################################## 
+print('Blindspots for frameworks')   
+
+def framehasBlindspot(Framework , Concern, result ):
+    blindspot=1
+    subconcerns=[]
+    subconcernsLevelWise=[]
+    findex = frameworks.index(Framework)
+    level = Con_dict[Concern]
+    
+    subconcerns = getSubConcerns(Concern)
+    
+    for c in subconcerns:
+        if(c in concerns):
+            cindex = concerns.index(c)
+            if(frameworksAndConcerns[findex][cindex] == 1 ):
+                blindspot = 0
+                break
+            else:
+                pass
+    
+    
+    if(blindspot == 1):
+        result.append(Concern)
+        # print(Concern)
+        # print (level[0])
+        # print('is a blindspot')
+        return
+    else:
+        for k, v in Con_dict.items():
+            if(k in subconcerns and v[0]==level[0]-1 ):
+                subconcernsLevelWise.append(k)
+                
+        for con in subconcernsLevelWise:
+            #if con in Con_dict:
+            framehasBlindspot(Framework , con, result ) 
+            
+
+
+ 
+result=[]     
+for i in frameworks :
+    findex=frameworks.index(i)
+    Frameworks_Blindspots_Concerns.write(findex+1,0,i.replace('https://w3id.org/i40/sto#', ''))
+    for j in c_Top :
+        cindex=c_Top.index(j)
+        Frameworks_Blindspots_Concerns.write(0,cindex+1,j.replace('https://w3id.org/i40/sto#', ''))
+        
+        # print(i)
+        # print(j)
+        framehasBlindspot(i , j, result )
+        # To get only one top most level bindspot out of all possible blindspots 
+        re= ' '
+        l=0  
+        #print(result)
+        for c in result:
+            if l < Con_dict[c][0]:
+                re = c
+        
+        
+        Frameworks_Blindspots_Concerns.write(findex+1,cindex+1,re.replace('https://w3id.org/i40/sto#', ''))    
+        result=[]        
+wb.save('xlwt example.xls') 
+        
+#######################################################################################################        
+
+print("\n standards recommended by frameworks:\n")
+Frameworks_Recommend_Standard.write(0,1, 'Frameworks')
+Frameworks_Recommend_Standard.write(0,2, 'Classifications')
+Frameworks_Recommend_Standard.write(0,3, 'Standards')
+results = s.query("PREFIX sto: <https://w3id.org/i40/sto#>  PREFIX sto_iot: <https://w3id.org/i40/sto/iot#> Select ?f ?c ?s  where  {?c sto:isDescribedin ?f. ?c rdf:type sto:StandardClassification.  ?f rdf:type sto:StandardizationFramework.?s rdf:type sto:Standard. ?s sto:hasClassification ?c }") ;
+Fr = []
+Clss = []
+Std = []
+i=1
+for row in results :
+    Fr.append(sparql.unpack_row(row)[0])
+    Clss.append(sparql.unpack_row(row)[1])
+    Std.append(sparql.unpack_row(row)[2])
+    
+    Frameworks_Recommend_Standard.write(i,1,Fr[i-1].replace('https://w3id.org/i40/sto#', ''))
+    Frameworks_Recommend_Standard.write(i,2,Clss[i-1].replace('https://w3id.org/i40/sto#', ''))
+    Frameworks_Recommend_Standard.write(i,3,Std[i-1].replace('https://w3id.org/i40/sto#', ''))
+    i = i + 1
+
+
+print("\n standards have concern:\n")
+Standard_Concern.write(0,1,'Standards')
+Standard_Concern.write(0,2,'Concerns')
+results = s.query("PREFIX sto: <https://w3id.org/i40/sto#>  PREFIX sto_iot: <https://w3id.org/i40/sto/iot#> Select  ?s  ?c  where  {?s rdf:type sto:Standard. ?c a sto_iot:Concern. ?s sto_iot:hasTargetConcern ?c  }") ;
+St = []
+c = []
+i=1
+for row in results :
+    St.append(sparql.unpack_row(row)[0])
+    c.append(sparql.unpack_row(row)[1])
+   
+    Standard_Concern.write(i,1,St[i-1].replace('https://w3id.org/i40/sto#', ''))
+    Standard_Concern.write(i,2,c[i-1].replace('https://w3id.org/i40/sto#', ''))
+    i = i + 1
+    
+#########################################################################
+
+print("\n Source (reference) for resources in the ontology:\n")
+Resource_Reference.write(0,1,'Resource')
+Resource_Reference.write(0,2,'Resource type')
+Resource_Reference.write(0,3,'Source(reference)')
+Resource_Reference.write(0,4,'Start Page')
+Resource_Reference.write(0,5,'End Page')
+Resource_Reference.write(0,6,'URL Link')
+
+results = s.query(" PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>  PREFIX oa: <https://www.w3.org/ns/oa> PREFIX sto: <https://w3id.org/i40/sto#>  PREFIX sto_iot: <https://w3id.org/i40/sto/iot#> PREFIX dds: <http://www.w3.org/2000/01/rdf-schema#>  Select distinct  ?resource ?type ?doc ?ep ?sp ?link where  {?anno rdf:type oa:Annotation; oa:hasBody ?resource; oa:hasTarget/oa:hasSelector/oa:hasEndSelector/rdf:value ?ep;  oa:hasTarget/oa:hasSelector/oa:hasStartSelector/rdf:value ?sp;  oa:hasTarget/oa:hasSource ?doc. ?resource a ?type. ?doc sto:hasOpenResource ?link}") ;
+St = []
+c = []
+i=1
+for row in results :
+    
+    Resource_Reference.write(i,1,sparql.unpack_row(row)[0].replace('https://w3id.org/i40/sto#', ''))
+    Resource_Reference.write(i,2,sparql.unpack_row(row)[1].replace('https://w3id.org/i40/sto#', ''))
+    Resource_Reference.write(i,3,sparql.unpack_row(row)[2].replace('https://w3id.org/i40/sto#', ''))
+    Resource_Reference.write(i,5,sparql.unpack_row(row)[3].replace('https://w3id.org/i40/sto#', ''))
+    Resource_Reference.write(i,4,sparql.unpack_row(row)[4].replace('https://w3id.org/i40/sto#', ''))
+    Resource_Reference.write(i,6,sparql.unpack_row(row)[5].replace('https://w3id.org/i40/sto#', ''))
+    i = i + 1 
+    
+
     
 wb.save('xlwt example.xls')   
 # UNION {?concern1 skos:broader ?concern2}
