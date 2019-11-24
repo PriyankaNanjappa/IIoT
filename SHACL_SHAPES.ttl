@@ -1,0 +1,47 @@
+sto:ClassificationShape
+    a sh:NodeShape ;
+    sh:targetClass sto:StandardClassification ; 
+  
+    sh:property [
+      sh:path sto:isDescribedin ;
+      sh:minCount 1 ;
+      sh:nodeKind sh:IRI ;
+      sh:pattern "^https://w3id.org/i40/sto#" ;
+    ];
+ .
+
+
+sto:StandardShape
+	a sh:NodeShape ;
+	sh:targetClass sto:Standard  ;
+        sh:property [
+				sh:path sto:hasStabilityDate;
+				sh:maxCount 1 ;
+                                sh:datatype xsd:gYear;
+			];
+        sh:property [
+				sh:path sto:hasEdition;
+				sh:maxCount 1 ;
+                                sh:datatype xsd:float;
+			];
+        sh:property [
+				sh:path sto:hasPages  ;
+				sh:maxCount 1 ;
+                                sh:datatype xsd:int;
+			];
+	sh:or (
+                [
+			sh:property [
+				sh:path owl:sameAs ;
+                                sh:minCount 1 ;
+			] ;
+		]
+		[
+			sh:property [
+				sh:path sto:hasPublicationDate  ;
+				sh:maxCount 1 ;
+                                sh:datatype xsd:date;
+			]
+		]
+		
+	) .
