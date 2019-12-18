@@ -17,16 +17,16 @@ wb = Workbook()
 # add_sheet is used to create sheets. 
 Frameworks_Concerns = wb.add_sheet('Frameworks_Concerns',cell_overwrite_ok=True)
 Classifications_Concerns = wb.add_sheet('Classifications_Concerns')
-FW1_FW2 = wb.add_sheet('FW1_FW2_Overlap',cell_overwrite_ok=True)
+FW1_FW2 = wb.add_sheet('FW1_FW2_Overlap')
 Concern_Hierarchy = wb.add_sheet('Concern_Hierarchy')
 Frameworks_Covers_Concerns = wb.add_sheet('Frameworks_Covers_Concerns',cell_overwrite_ok=True)
 classifications_Covers_Concerns = wb.add_sheet('classifications_Covers_Concerns',cell_overwrite_ok=True)
 Frameworks_Blindspots_Concerns = wb.add_sheet('Frameworks_Blindspots_Concerns',cell_overwrite_ok=True)
-Frameworks_Recommend_Standard = wb.add_sheet('Frameworks_Recommend_Standard',cell_overwrite_ok=True)
-Standard_Concern = wb.add_sheet('Standard_Concern',cell_overwrite_ok=True)
-Resource_Reference = wb.add_sheet('Resource_Reference',cell_overwrite_ok=True)
+Frameworks_Recommend_Standard = wb.add_sheet('Frameworks_Recommend_Standard')
+Standard_Concern = wb.add_sheet('Standard_Concern')
+Resource_Reference = wb.add_sheet('Resource_Reference')
 
-
+#https://dydra.com/pnanjappa/thesis/sparql
 #SPARQL endpoint
 s = sparql.Service('https://dydra.com/pnanjappa/thesis/sparql', "utf-8", "GET") ;
 
@@ -567,10 +567,12 @@ def framehasBlindspot(Framework , Concern, result ):
 
 
  
-result=[]     
+result=[] 
+ln=1    
 for i in frameworks :
     findex=frameworks.index(i)
-    Frameworks_Blindspots_Concerns.write(findex+1,0,i.replace('https://w3id.org/i40/sto#', ''))
+    Frameworks_Blindspots_Concerns.write(findex+ln,0,i.replace('https://w3id.org/i40/sto#', ''))
+    lmax=0
     for j in c_Top :
         cindex=c_Top.index(j)
         Frameworks_Blindspots_Concerns.write(0,cindex+1,j.replace('https://w3id.org/i40/sto#', ''))
@@ -579,16 +581,16 @@ for i in frameworks :
         # print(j)
         framehasBlindspot(i , j, result )
         # To get only one top most level bindspot out of all possible blindspots 
-        re= ' '
-        l=0  
+        l=0
+        
         #print(result)
         for c in result:
-            if l < Con_dict[c][0]:
-                re = c
-        
-        
-        Frameworks_Blindspots_Concerns.write(findex+1,cindex+1,re.replace('https://w3id.org/i40/sto#', ''))    
-        result=[]        
+            Frameworks_Blindspots_Concerns.write(findex+ln+l,cindex+1,c.replace('https://w3id.org/i40/sto#', ''))
+            l =l+1
+        if lmax < l:
+            lmax=l
+        result=[]  
+    ln=ln+lmax   
 wb.save('xlwt example.xls') 
         
 #######################################################################################################        
@@ -652,7 +654,7 @@ for row in results :
     Resource_Reference.write(i,6,sparql.unpack_row(row)[5].replace('https://w3id.org/i40/sto#', ''))
     i = i + 1 
     
-
+##############################################################
     
 wb.save('xlwt example.xls')   
 # UNION {?concern1 skos:broader ?concern2}

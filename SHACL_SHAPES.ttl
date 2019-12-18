@@ -1,3 +1,15 @@
+@prefix dash: <http://datashapes.org/dash#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <http://schema.org/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sto: <https://w3id.org/i40/sto#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix lvont:<http://lexvo.org/ontology> .
+@prefix om2: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+
 sto:ClassificationShape
     a sh:NodeShape ;
     sh:targetClass sto:StandardClassification ; 
@@ -5,6 +17,7 @@ sto:ClassificationShape
     sh:property [
       sh:path sto:isDescribedin ;
       sh:minCount 1 ;
+      sh:class sto:StandardizationFramework ;
       sh:nodeKind sh:IRI ;
       sh:pattern "^https://w3id.org/i40/sto#" ;
     ];
@@ -13,7 +26,39 @@ sto:ClassificationShape
 
 sto:StandardShape
 	a sh:NodeShape ;
+
 	sh:targetClass sto:Standard  ;
+sh:property [
+				sh:path sto:hasTechnicalCommittee;
+                                sh:Class sto:TechnicalCommittee;
+			];
+sh:property [
+				sh:path sto:relatedTo;
+                                sh:Class sto:Standard;
+			];
+sh:property [
+				sh:path sto:hasPreviousVersion;
+				sh:maxCount 1 ;
+                                sh:Class sto:Standard;
+			];
+        sh:property [
+				sh:path sto:hasFileSize;
+				sh:maxCount 1 ;
+                                sh:Class om2:Measure;
+			];
+        sh:property [
+				sh:path sto:hasICS;
+                                sh:Class sto:InternationalClassificationForStandards ;
+			];
+        sh:property [
+				sh:path sto:hasPublisher;
+                                sh:Class sto:StandardOrganization;
+			];
+        sh:property [
+				sh:path sto:hasAvailableLanguage;
+                                sh:nodeKind sh:IRI ;
+                                sh:pattern "^http://lexvo.org/id/iso639-3/" ;
+			];
         sh:property [
 				sh:path sto:hasStabilityDate;
 				sh:maxCount 1 ;
@@ -33,7 +78,7 @@ sto:StandardShape
                 [
 			sh:property [
 				sh:path owl:sameAs ;
-                                sh:minCount 1 ;
+                                sh:minCount 0;
 			] ;
 		]
 		[
